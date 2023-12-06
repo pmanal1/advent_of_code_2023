@@ -42,22 +42,31 @@ def getNumbers(line, range):
 
 
 partNumbers = []
+sumGearRatio = 0
 file = open('input.txt').readlines()
 
 for lineIndex, line in enumerate(file):
     for charIndex, character in enumerate(line):
         if(isSymbol(character)):
+            currentSymbolParts = []
+
             # Checking around the symbol for numbers (promixity sections)
-            partNumbers.extend(getNumbers(file[lineIndex - 1], range(charIndex - 1, charIndex + 2))) # The three above the symbol
+            currentSymbolParts.extend(getNumbers(file[lineIndex - 1], range(charIndex - 1, charIndex + 2))) # The three above the symbol
 
             # One on each side of the symbol
-            partNumbers.extend(getNumbers(file[lineIndex], range(charIndex - 1, charIndex)))
-            partNumbers.extend(getNumbers(file[lineIndex], range(charIndex + 1, charIndex + 2)))
+            currentSymbolParts.extend(getNumbers(file[lineIndex], range(charIndex - 1, charIndex)))
+            currentSymbolParts.extend(getNumbers(file[lineIndex], range(charIndex + 1, charIndex + 2)))
 
-            partNumbers.extend(getNumbers(file[lineIndex + 1], range(charIndex - 1, charIndex + 2))) # The three below the symbol
+            currentSymbolParts.extend(getNumbers(file[lineIndex + 1], range(charIndex - 1, charIndex + 2))) # The three below the symbol
+
+            partNumbers.extend(currentSymbolParts)
+            if(len(currentSymbolParts) == 2 and character == "*"):
+                sumGearRatio += currentSymbolParts[0] * currentSymbolParts[1]
+            currentSymbolParts = []
             
 
 sum = 0
 for part in partNumbers:
     sum += part
 print(sum)
+print(sumGearRatio)
